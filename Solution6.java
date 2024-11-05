@@ -1,7 +1,9 @@
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * @description:
@@ -40,7 +42,10 @@ import java.util.Set;
  * 用户收藏的公司清单也 各不相同 ，也就是说，即便我们按字母顺序排序每个清单， favoriteCompanies[i] != favoriteCompanies[j] 仍然成立。
  * 所有字符串仅包含小写英文字母。
  *
- */
+ *//*
+
+*/
+/*
 class Solution6 {
     Set<String>[] s = new Set[105];
 
@@ -81,3 +86,54 @@ class Solution6 {
             return true;
         }
     }
+*/
+
+
+class Solution6 {
+    // 定义一个Set数组，存储每个人的收藏清单
+    Set<String>[] s = new Set[105];
+
+    // 主方法，返回不是其他任何人收藏的公司清单的子集的收藏清单的下标
+    public List<Integer> peopleIndexes(List<List<String>> favoriteCompanies) {
+        // 初始化Set数组
+        for (int i = 0; i < 105; ++i) {
+            s[i] = new HashSet<String>();
+        }
+        int n = favoriteCompanies.size(); // 获取收藏清单的数量
+        List<Integer> ans = new ArrayList<Integer>(); // 存储结果的列表
+
+        // 将每个人的收藏清单存储到Set数组中
+        for (int i = 0; i < n; ++i) {
+            for (String com : favoriteCompanies.get(i)) {
+                s[i].add(com);
+            }
+        }
+
+        // 遍历每个人的收藏清单，判断是否是其他人的子集
+        for (int i = 0; i < n; ++i) {
+            boolean isSub = false; // 标记是否是子集
+            for (int j = 0; j < n; ++j) {
+                if (i == j) {
+                    continue; // 跳过自己
+                }
+                isSub |= check(favoriteCompanies, i, j); // 检查是否是子集
+            }
+            if (!isSub) {
+                ans.add(i); // 如果不是子集，加入结果列表
+            }
+        }
+
+        return ans; // 返回结果列表
+    }
+
+    // 辅助方法，检查x是否是y的子集
+    private boolean check(List<List<String>> favoriteCompanies, int x, int y) {
+        for (String com : favoriteCompanies.get(x)) {
+            if (!s[y].contains(com)) {
+                return false; // 如果x中的某个公司不在y中，返回false
+            }
+        }
+        return true; // 如果x中的所有公司都在y中，返回true
+    }
+}
+
